@@ -42,12 +42,12 @@ class BaseSearchAPI(rest_views.APIView, SerializationMixin):
         limit = submitted_data.get('limit', 10)
         offset = submitted_data.get('offset', 0)
 
-        records = self.get_data(search_term, limit, offset)
+        records = self.get_results(search_term, limit, offset)
 
         serializer = self.serializer_class(records, many=True, context={'request': request})
         return django_response.JsonResponse(serializer.data, status=rf_status.HTTP_200_OK)
 
-    def get_data(self, *args, **kwargs):
+    def get_results(self, *args, **kwargs):
         raise NotImplementedError
 
 
@@ -58,13 +58,13 @@ class Branches(BaseSearchAPI):
     def searchable_fields(self):
         return ['ifsc', 'branch', 'city', 'district', 'state', 'address']
 
-    def get_data(self, search_term, limit, offset, **kwargs):
+    def get_results(self, search_term, limit, offset, **kwargs):
         query = {i: search_term for i in self.searchable_fields}
         return api_utils.get_search_results_for_search_query(query, limit=limit, offset=offset)
 
 class BranchAutocomplete(BaseSearchAPI):
 
-    def get_data(self, search_term, limit, offset, **kwargs):
+    def get_results(self, search_term, limit, offset, **kwargs):
         query = {'branch': search_term}
 
         return api_utils.get_search_results_for_search_query(query, limit=limit, offset=offset)

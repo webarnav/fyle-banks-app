@@ -3,13 +3,13 @@ from django.db import models
 
 class Bank(models.Model):
 
-    ifsc = models.CharField(unique=True)
+    ifsc = models.CharField(unique=True, max_length=255)
     bank_id = models.IntegerField(primary_key=True)
-    branch = models.CharField(required=True)
-    address =  models.TextField()
-    city = models.CharField()
-    district = models.CharField()
-    state = models.CharField()
+    branch = models.CharField(max_length=255)
+    address =  models.TextField(max_length=255)
+    city = models.CharField(max_length=255)
+    district = models.CharField(max_length=255)
+    state = models.CharField(max_length=255)
 
     created_at = models.DateTimeField(auto_now=False)
     updated_at = models.DateTimeField(auto_now=True)
